@@ -1,0 +1,96 @@
+from zipfile import ZipFile
+import os
+
+# Recreate directory after code execution state reset
+static_site_path = "/mnt/data/bulgaria-itinerary-static"
+os.makedirs(static_site_path, exist_ok=True)
+
+# Basic index.html content
+static_index_html = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulgaria Trip Itinerary</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    a {
+      color: #0066cc;
+    }
+    .day {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Bulgaria Trip Itinerary</h1>
+  <p><strong>June 1–14, 2025</strong><br>Departing from Houston (LH 441 & LH 1426)<br>Returning from Sofia (LH 1431 & LH 440)</p>
+
+  <div class="day">
+    <h2>June 2–5: Sofia</h2>
+    <ul>
+      <li><a href="https://www.lonelyplanet.com/bulgaria/sofia" target="_blank">Sofia City Center Walking Tour</a></li>
+      <li><a href="https://www.tripadvisor.com/Attraction_Review-g294452-d553133-Reviews-Alexander_Nevsky_Cathedral-Sofia_Sofia_Region.html" target="_blank">Alexander Nevsky Cathedral</a></li>
+      <li><a href="https://www.atlasobscura.com/places/museum-of-socialist-art" target="_blank">Museum of Socialist Art</a></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h2>June 6–8: Plovdiv</h2>
+    <ul>
+      <li><a href="https://www.visitplovdiv.com/en/node/2" target="_blank">Old Town of Plovdiv</a></li>
+      <li><a href="https://ancient-theatre.com/" target="_blank">Ancient Roman Theatre</a></li>
+      <li><a href="https://kapana.bg/" target="_blank">Kapana Creative District</a></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h2>June 9–11: Veliko Tarnovo</h2>
+    <ul>
+      <li><a href="https://www.bulgariatravel.org/en/tsarevets-fortress/" target="_blank">Tsarevets Fortress</a></li>
+      <li><a href="https://www.lonelyplanet.com/bulgaria/veliko-tarnovo" target="_blank">Samovodska Charshia Market Street</a></li>
+    </ul>
+  </div>
+
+  <div class="day">
+    <h2>June 12–13: Return to Sofia</h2>
+    <ul>
+      <li>Relaxing day, shopping, parks, or a spa</li>
+      <li><a href="https://www.boyanachurch.org/" target="_blank">Boyana Church (UNESCO site)</a></li>
+    </ul>
+  </div>
+
+  <p><strong>June 14: Fly home from Sofia (LH 1431 & LH 440)</strong></p>
+</body>
+</html>
+"""
+
+# Save the index.html file
+static_index_path = os.path.join(static_site_path, "index.html")
+with open(static_index_path, "w") as f:
+    f.write(static_index_html)
+
+# Create a zip of the static site
+static_zip_path = "/mnt/data/bulgaria-itinerary-static.zip"
+with ZipFile(static_zip_path, "w") as zipf:
+    for root, _, files in os.walk(static_site_path):
+        for file in files:
+            full_path = os.path.join(root, file)
+            relative_path = os.path.relpath(full_path, static_site_path)
+            zipf.write(full_path, arcname=relative_path)
+
+static_zip_path
